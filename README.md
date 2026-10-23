@@ -9,6 +9,13 @@
 
 ---
 
+## 📊 Présentation & Documents Collaborateurs
+* 🌐 **Présentation Interactive (Diaporama 10 Slides)** : [https://konechoco.github.io/bema-transport/presentation.html](https://konechoco.github.io/bema-transport/presentation.html)
+* 📄 **Dossier de Présentation Format A4 (HTML)** : [https://konechoco.github.io/bema-transport/dossier_presentation.html](https://konechoco.github.io/bema-transport/dossier_presentation.html)
+* 📥 **Dossier de Présentation Téléchargeable (PDF 7 Pages)** : [BEMA_TRANSPORT_Dossier_de_Presentation.pdf](BEMA_TRANSPORT_Dossier_de_Presentation.pdf)
+
+---
+
 ## 🌟 Fonctionnalités Principales
 
 ### 1. 🎫 Portail Voyageur (Style FlixBus)

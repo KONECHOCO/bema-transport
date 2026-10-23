@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEMA TRANSPORT — Dossier de Présentation Exécutif</title>
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 10mm 15mm;
+        }
+
+        :root {
+            --primary: #059669;
+            --primary-light: #10b981;
+            --dark: #0b132b;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --bg-light: #f8fafc;
+            --accent: #d97706;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-dark);
+            background: #ffffff;
+            font-size: 9pt;
+            line-height: 1.38;
+        }
+
+        .page {
+            width: 100%;
+            height: 250mm;
+            max-height: 250mm;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            page-break-after: always;
+            break-after: page;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page:last-of-type {
+            page-break-after: auto;
+            break-after: auto;
+        }
+
+        /* En-tête et pied de page officiel */
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        .doc-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+        }
+
+        .doc-header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13pt;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .doc-header-meta {
+            font-size: 8pt;
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        .doc-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px solid var(--border);
+            padding-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: var(--text-light);
+            background: white;
+        }
+
+        /* Page de Garde */
+        .cover-page {
+            text-align: center;
+            justify-content: center;
+            padding: 40mm 15mm;
+        }
+
+        .cover-logo-big {
+            width: 120px;
+            height: 120px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            border: 3px solid var(--primary);
+        }
+
+        .cover-company-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32pt;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+
+        .cover-slogan {
+            font-size: 13pt;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .cover-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0 auto 30px;
+            border-radius: 2px;
+        }
+
+        .cover-doc-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20pt;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .cover-doc-subtitle {
+            font-size: 11pt;
+            color: var(--text-light);
+            max-width: 520px;
+            margin: 0 auto 40px;
+        }
+
+        .cover-meta-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 440px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: 9.5pt;
+        }
+
+        .cover-meta-box div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .cover-meta-box div:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Sections de contenu */
+        h2.section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18pt;
+            color: var(--dark);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        h3.subsection-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13pt;
+            color: var(--primary);
+            margin: 14px 0 6px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            text-align: justify;
+        }
+
+        /* Grilles & Cartes */
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .card-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .card-box h4 {
+            font-size: 11pt;
+            color: var(--dark);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .screenshot-container {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin: 6px 0;
+            text-align: center;
+            background: #090f1d;
+        }
+
+        .screenshot-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .screenshot-caption {
+            background: #f1f5f9;
+            color: var(--text-light);
+            font-size: 7.5pt;
+            padding: 3px 8px;
+            font-style: italic;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Tableaux */
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin: 12px 0;
+        }
+
+        table.data-table th, table.data-table td {
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        table.data-table th {
+            background: #f1f5f9;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        table.data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .badge-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 8pt;
+            font-weight: 700;
+        }
+
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-blue { background: #e0f2fe; color: #0369a1; }
+
+        /* KPI Box */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .kpi-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .kpi-item strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15pt;
+            color: var(--primary);
+            display: block;
+        }
+
+        .kpi-item span {
+            font-size: 7.5pt;
+            color: var(--text-light);
+        }
+
+        /* Print adjustments */
+        @media print {
+            body { background: white; }
+            .page {
+                height: 255mm !important;
+                max-height: 255mm !important;
+                min-height: auto !important;
+                page-break-inside: avoid !important;
+                page-break-after: always !important;
+                break-inside: avoid !important;
+                break-after: page !important;
+                overflow: hidden !important;
+            }
+            .page:last-of-type {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         PAGE 1 : COUVERTURE OFFICIELLE DU DOSSIER
+         ========================================================================== -->
+    <div class="page cover-page">
+        <div>
+            <img src="assets/logo.jpg" alt="Logo BEMA" class="cover-logo-big">
+            <h1 class="cover-company-name">BEMA TRANSPORT S.A.R.L.</h1>
+            <p class="cover-slogan">L'excellence du voyage au cœur de la Côte d'Ivoire</p>
+            <div class="cover-divider"></div>
+
+            <h2 class="cover-doc-title">DOSSIER STRATÉGIQUE & TECHNIQUE DE PRÉSENTATION</h2>
+            <p class="cover-doc-subtitle">
+                Plateforme Numérique Intégrée de Réservation, Suivi GPS en Temps Réel et Gestion de Flotte de Transport Interurbain
+            </p>
+
+            <div class="cover-meta-box">
+                <div><span>Destinataires :</span> <strong>Collaborateurs, Partenaires & Investisseurs</strong></div>
+                <div><span>Liaison Pilote :</span> <strong>KORHOGO ➔ ABIDJAN (580 km)</strong></div>
+                <div><span>Tarif Référentiel :</span> <strong>10 000 FCFA (Garanti)</strong></div>
+                <div><span>Moyens de Paiement :</span> <strong>Wave, Orange Money, MTN MoMo, Moov</strong></div>
+                <div><span>Date de Rédaction :</span> <strong>Octobre 2026</strong></div>
+                <div><span>Statut du Projet :</span> <span class="badge-pill badge-green">Déployé & Opérationnel</span></div>
+            </div>
+        </div>
+        <div class="doc-footer" style="margin-top:40px;">
+            <span>Siège : Korhogo, Quartier Sinistré • Contact : +225 27 36 86 00 12</span>
+            <span>Document Confidentiel — Usage Interne & Partenaires</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 2 : RÉSUMÉ EXÉCUTIF & OPPORTUNITÉ DU MARCHÉ
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 02</div>
+            </div>
+
+            <h2 class="section-title">1. Résumé Exécutif & Contexte Stratégique</h2>
+            <p>
+                Le transport routier de passagers en Côte d'Ivoire représente plus de <strong>85% des déplacements interurbains nationaux</strong>, porté par une population dynamique de plus de 30 millions d'habitants et des échanges économiques intenses entre le pôle économique d'Abidjan et les capitales régionales de l'intérieur (Bouaké, Yamoussoukro, Korhogo, San-Pédro).
+            </p>
+            <p>
+                Cependant, le secteur souffre d'un déficit technologique majeur : la billetterie traditionnelle repose encore sur des carnets papier ou des guichets manuels saturés à la gare d'Adjamé ou de Korhogo, les passagers ne peuvent pas choisir leur place, les départs accusent des retards imprévisibles et les gestionnaires manquent d'outils télématiques fiables pour superviser leurs cars sur l'Autoroute du Nord.
+            </p>
+
+            <h3 class="subsection-title">Les Piliers de la Réponse BEMA TRANSPORT</h3>
+            <div class="two-cols">
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-mobile-screen text-emerald"></i> Expérience Voyageur "FlixBus"</h4>
+                    <p>Réservation à distance en 2 minutes, choix du siège sur plan 2x2 interactif, e-billet dématérialisé avec QR Code et paiement direct par Mobile Money ivoirien.</p>
+                </div>
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-satellite-dish text-emerald"></i> Télémétrie & Suivi GPS Live</h4>
+                    <p>Traçabilité satellitaire totale du car le long des 580 km de l'axe Korhogo-Abidjan, avec vitesse instantanée, décompte kilométrique et estimation précise de l'heure d'arrivée (ETA).</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">La Tranche Pilote : Axe Nord Korhogo - Abidjan</h3>
+            <p>
+                Pour le démarrage opérationnel, BEMA TRANSPORT s'implante sur l'artère maîtresse du pays reliant la <strong>Région des Savanes (Poro)</strong> au District Autonome d'Abidjan :
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Itinéraire</th>
+                        <th>Distance</th>
+                        <th>Durée Moyenne</th>
+                        <th>Tarif Fixé</th>
+                        <th>Gares Desservies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Korhogo ➔ Abidjan</strong></td>
+                        <td>580 km</td>
+                        <td>8h 45m</td>
+                        <td><strong>10 000 FCFA</strong></td>
+                        <td>Gare Sinistré Korhogo ➔ Niakara ➔ Katiola ➔ Bouaké ➔ Yamoussoukro ➔ Tiassalé ➔ Adjamé Liberté</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bouaké ➔ Abidjan</strong></td>
+                        <td>340 km</td>
+                        <td>5h 00m</td>
+                        <td><strong>6 000 FCFA</strong></td>
+                        <td>Gare BEMA Commerce (Bouaké) ➔ Yamoussoukro ➔ Adjamé</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Yamoussoukro ➔ Abidjan</strong></td>
+                        <td>240 km</td>
+                        <td>3h 15m</td>
+                        <td><strong>4 000 FCFA</strong></td>
+                        <td>Gare Fondation (Yamoussoukro) ➔ Toumodi ➔ Adjamé</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="screenshot-container">
+                <img src="assets/screenshots/trips.png" alt="Horaires et Départs BEMA" class="screenshot-img">
+                <div class="screenshot-caption">Module Voyageur : Liste des départs Korhogo - Abidjan à 10 000 FCFA avec indicateurs d'équipements</div>
+            </div>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>https://konechoco.github.io/bema-transport/</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 3 : PARCOURS CLIENT, PLAN DE CAR & PAIEMENTS MOBILE MONEY
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 03</div>
+            </div>
+
+            <h2 class="section-title">2. L'Expérience Client & La Passerelle Monétique</h2>
+            <p>
+                L'application supprime toute friction à l'achat grâce à un entonnoir de réservation fluide en 3 étapes : sélection du trajet, choix visuel du siège, et règlement immédiat via les portefeuilles électroniques utilisés quotidiennement par les Ivoiriens.
+            </p>
+
+            <div class="two-cols">
+                <div>
+                    <h3 class="subsection-title">Plan de Car 2x2 Interactif</h3>
+                    <p style="font-size:9.5pt;">
+                        Inspiré des plateformes européennes (FlixBus, Deutsche Bahn), le client visualise la structure exacte de l'autocar (Scania Marcopolo G8 de 48 places) :
+                    </p>
+                    <ul style="font-size:9pt; margin-left:16px; margin-bottom:10px; color:var(--text-dark);">
+                        <li>Poste de conduite & porte d'accès avec escalier.</li>
+                        <li>Places fenêtres (A & D) et places couloir (B & C).</li>
+                        <li>Sièges panoramiques au premier rang (vue pare-brise).</li>
+                        <li>Indicateur de proximité des toilettes à bord (WC).</li>
+                        <li>Option bagage additionnel en soute (+1 500 FCFA).</li>
+                    </ul>
+                    <div class="screenshot-container">
+                        <img src="assets/screenshots/seatmap.png" alt="Plan de sièges interactif" class="screenshot-img">
+                        <div class="screenshot-caption">Visualisation du car avec sélection du siège N° 13A (10 000 FCFA)</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Paiement Mobile Money CI</h3>
+                    <p style="font-size:9.5pt;">
+                        La Côte d'Ivoire est le leader ouest-africain du Mobile Money. La plateforme intègre sans intermédiaire tous les opérateurs agréés :
+                    </p>
+                    <ul style="font-size:9pt; margin-left:16px; margin-bottom:10px; color:var(--text-dark);">
+                        <li><strong>Wave CI</strong> : Validation par QR Code ou Push (0% frais).</li>
+                        <li><strong>Orange Money CI</strong> : Code temporaire USSD <code>#144*82#</code>.</li>
+                        <li><strong>MTN MoMo & Moov Flooz</strong> : Prélèvement direct.</li>
+                        <li><strong>Cartes Bancaires</strong> : Visa, Mastercard, UBA.</li>
+                        <li><strong>Paiement en Gare</strong> : Blocage garanti 2h avant le départ.</li>
+                    </ul>
+                    <div class="screenshot-container">
+                        <img src="assets/screenshots/payment.png" alt="Passerelle Mobile Money" class="screenshot-img">
+                        <div class="screenshot-caption">Guichet de paiement Mobile Money avec Wave & Orange Money</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Sécurité Monétaire & Rapprochement Comptable</h3>
+            <p>
+                Toutes les transactions sont instantanément créditées sur le compte marchand de BEMA TRANSPORT. Aucun agent de gare ne manipule d'argent liquide sur les réservations en ligne, supprimant 100% des risques d'impayés, de fausse monnaie ou de coulage financier.
+            </p>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>https://konechoco.github.io/bema-transport/</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 4 : LE TITRE DE VOYAGE E-BILLET & CONTRÔLE D'ACCÈS QR
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 04</div>
+            </div>
+
+            <h2 class="section-title">3. Le Billet Électronique & La Technologie QR Code</h2>
+            <p>
+                Dès confirmation du paiement, un <strong>e-Billet officiel certifié</strong> est généré en temps réel pour le voyageur. Il répond aux normes d'authentification du transport interurbain et fait office de preuve de transport légale et d'étiquette bagage.
+            </p>
+
+            <div class="screenshot-container" style="max-height:240px;">
+                <img src="assets/screenshots/ticket.png" alt="Billet Électronique Officiel BEMA" class="screenshot-img" style="max-height:200px;">
+                <div class="screenshot-caption">Billet officiel BEMA : coupon perforé, référence unique BEMA-KOR-ABJ-1274, QR code de contrôle</div>
+            </div>
+
+            <div class="two-cols" style="margin-top:14px;">
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-qrcode text-emerald"></i> Coupon de Contrôle & QR Crypté</h4>
+                    <p style="font-size:9pt;">
+                        Le QR code encode la référence de réservation, l'identifiant du car, le numéro de siège et l'identité du passager. Même en cas de coupure réseau en gare de Korhogo, le scanner BEMA valide l'authenticité du billet en local grâce à son algorithme de vérification asynchrone.
+                    </p>
+                </div>
+                <div class="card-box">
+                    <h4><i class="fa-brands fa-whatsapp text-emerald"></i> Partage WhatsApp & Dématérialisation</h4>
+                    <p style="font-size:9pt;">
+                        Un simple clic permet au client d'expédier son titre de transport directement sur son WhatsApp ou de l'imprimer au format standard (A4 ou ticket thermique). Les convocations indiquent l'heure limite d'accès (30 minutes avant l'heure de départ officielle).
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Protocole Anti-Fraude d'Embarquement</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Étape</th>
+                        <th>Action Voyageur</th>
+                        <th>Action Contrôleur BEMA</th>
+                        <th>Résultat Système</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Présentation</strong></td>
+                        <td>Affiche le QR code sur son smartphone ou version papier</td>
+                        <td>Vise le QR avec le lecteur ou saisit la référence</td>
+                        <td>Lecture instantanée (&lt; 1 sec)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Conformité</strong></td>
+                        <td>Présente sa pièce d'identité (CNI / Passeport ONECI)</td>
+                        <td>Vérifie la concordance du nom et du siège</td>
+                        <td>Double-bip sonore de validation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Compostage</strong></td>
+                        <td>Accède au fauteuil assigné dans le car</td>
+                        <td>Confirme l'embarquement définitif</td>
+                        <td>Statut mis à jour sur <strong>EMBARQUÉ</strong> (billet verrouillé contre toute réutilisation)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>https://konechoco.github.io/bema-transport/</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 5 : SUIVI GPS RADAR EN TEMPS RÉEL & TÉLÉMÉTRIE
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 05</div>
+            </div>
+
+            <h2 class="section-title">4. Télématique Satellitaire & Radar Live GPS</h2>
+            <p>
+                BEMA TRANSPORT est la première compagnie interurbaine de Côte d'Ivoire à intégrer un <strong>Radar Télématique Ouvert</strong> permettant aux passagers, à leurs familles d'accueil et au poste de commandement de visualiser le car en déplacement continu sur la carte nationale.
+            </p>
+
+            <div class="screenshot-container">
+                <img src="assets/screenshots/map.png" alt="Radar GPS en direct" class="screenshot-img" style="max-height:220px;">
+                <div class="screenshot-caption">Cartographie de l'Axe A3 Korhogo - Abidjan avec marqueur radar BEMA-401 (82 km/h) et HUD de bord</div>
+            </div>
+
+            <div class="two-cols" style="margin-top:14px;">
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-gauge text-info"></i> Télémétrie Cockpit HUD</h4>
+                    <p style="font-size:9pt;">
+                        Le cruscotto affiche en direct :
+                    </p>
+                    <ul style="font-size:8.5pt; margin-left:14px; color:var(--text-dark);">
+                        <li><strong>Vitesse instantanée</strong> : 80 à 90 km/h sur autoroute.</li>
+                        <li><strong>Avancement de l'étape</strong> : % parcouru et km restants.</li>
+                        <li><strong>Prochain arrêt</strong> : ex. Gare de Bouaké à 25 km.</li>
+                        <li><strong>ETA dynamique</strong> : Heure estimée d'arrivée à Adjamé.</li>
+                    </ul>
+                </div>
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-bell text-accent"></i> Gestion Proactive des Retards</h4>
+                    <p style="font-size:9pt;">
+                        En cas de ralentissement aux péages autoroutiers (Attinguié, Yamoussoukro) ou de contrôle douanier, le système met à jour l'ETA, diffuse un carillon d'avertissement et notifie les voyageurs par SMS/Push pour une transparence exemplaire.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Balises d'Étape Officielles le Long de l'Axe A3</h3>
+            <p style="font-size:9.5pt;">
+                1. <strong>Gare Sinistré (Korhogo)</strong> [PK 0] ➔ 2. <strong>Péage Nord</strong> [PK 12] ➔ 3. <strong>Niakaramandougou</strong> [PK 110] ➔ 4. <strong>Katiola</strong> [PK 185] ➔ 5. <strong>Gare Centrale Bouaké</strong> [PK 245] ➔ 6. <strong>Yamoussoukro</strong> [PK 360] ➔ 7. <strong>Toumodi Péage</strong> [PK 405] ➔ 8. <strong>Relais Tiassalé</strong> [PK 480] ➔ 9. <strong>Péage Attinguié</strong> [PK 545] ➔ 10. <strong>Gare Adjamé Liberté (Abidjan)</strong> [PK 580].
+            </p>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>https://konechoco.github.io/bema-transport/</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 6 : ESPACE COMPAGNIE, FLOTTE & SCANNER D'EMBARQUEMENT
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 06</div>
+            </div>
+
+            <h2 class="section-title">5. Back-Office Compagnie & Supervision de Flotte</h2>
+            <p>
+                L'Espace Gestionnaire met à la disposition de la direction et des chefs d'exploitation un poste de commande unifié pour piloter les recettes journalières, planifier les rotations et superviser la conformité des autocars.
+            </p>
+
+            <div class="kpi-row">
+                <div class="kpi-item">
+                    <strong>2 450 000</strong>
+                    <span>Recettes Journalières (FCFA)</span>
+                </div>
+                <div class="kpi-item">
+                    <strong>245</strong>
+                    <span>Billets Émis ce Jour</span>
+                </div>
+                <div class="kpi-item">
+                    <strong>88%</strong>
+                    <span>Taux d'Occupation Moyen</span>
+                </div>
+                <div class="kpi-item">
+                    <strong>4 Cars</strong>
+                    <span>En Route Active</span>
+                </div>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="assets/screenshots/scanner.png" alt="Scanner de validation en gare" class="screenshot-img" style="max-height:180px;">
+                <div class="screenshot-caption">Interface Scanner : Validation instantanée d'un voyageur (Kouamé Jean-Marc, Siège 13A, Trajet Korhogo ➔ Abidjan)</div>
+            </div>
+
+            <h3 class="subsection-title">Inventaire de la Flotte BEMA TRANSPORT</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID Car</th>
+                        <th>Immatriculation</th>
+                        <th>Modèle & Carrosserie</th>
+                        <th>Capacité</th>
+                        <th>Chauffeur Titulaire</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BUS-01</strong></td>
+                        <td><code>1428 HG 01</code></td>
+                        <td>Scania Marcopolo Paradiso G8</td>
+                        <td>48 fauteuils</td>
+                        <td>Amadou Koné (12 ans exp.)</td>
+                        <td><span class="badge-pill badge-green">En Circulation</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>BUS-02</strong></td>
+                        <td><code>8922 JJ 01</code></td>
+                        <td>Volvo 9700 Luxury Coach</td>
+                        <td>52 fauteuils</td>
+                        <td>Seydou Traoré (10 ans exp.)</td>
+                        <td><span class="badge-pill badge-blue">À Quai (Prêt)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>BUS-03</strong></td>
+                        <td><code>5610 HG 01</code></td>
+                        <td>Mercedes-Benz Tourismo</td>
+                        <td>48 fauteuils</td>
+                        <td>Bakary Ouattara (14 ans exp.)</td>
+                        <td><span class="badge-pill badge-blue">À Quai</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>BUS-04</strong></td>
+                        <td><code>9904 KK 01</code></td>
+                        <td>Marcopolo Double Decker VIP</td>
+                        <td>40 couchettes</td>
+                        <td>Ibrahim Coulibaly (11 ans exp.)</td>
+                        <td><span class="badge-pill badge-amber">Service Nuit</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>https://konechoco.github.io/bema-transport/</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 7 : MODÈLE ÉCONOMIQUE, FEUILLE DE ROUTE & SIGNATURES
+         ========================================================================== -->
+    <div class="page">
+        <div>
+            <div class="doc-header">
+                <div class="doc-header-brand">
+                    <img src="assets/logo.jpg" alt="Logo" class="doc-logo">
+                    <span class="doc-header-title">BEMA TRANSPORT</span>
+                </div>
+                <div class="doc-header-meta">Dossier Exécutif • 2026<br>Page 07</div>
+            </div>
+
+            <h2 class="section-title">6. Modèle Économique & Feuille de Route 2026-2027</h2>
+            
+            <h3 class="subsection-title">Rentabilité Unitaire d'un Car (Ligne Korhogo ➔ Abidjan)</h3>
+            <p>
+                Calculé sur la base d'un autocar grand tourisme de 48 places à un taux moyen d'occupation de 85% :
+            </p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Poste Financier</th>
+                        <th>Montant par Trajet Simple</th>
+                        <th>Projection Mensuelle (4 Départs/J)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Recettes Billetterie (10 000 FCFA × 41 passagers)</strong></td>
+                        <td><strong>410 000 FCFA</strong></td>
+                        <td>49 200 000 FCFA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recettes Bagages Supplémentaires & Fret Express</strong></td>
+                        <td>35 000 FCFA</td>
+                        <td>4 200 000 FCFA</td>
+                    </tr>
+                    <tr style="background:#f1f5f9; font-weight:700;">
+                        <td><strong>Chiffre d'Affaires Brut Estimé</strong></td>
+                        <td><strong>445 000 FCFA</strong></td>
+                        <td><strong>53 400 000 FCFA</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Carburant Gasoil (180 Litres × 750 FCFA)</td>
+                        <td>- 135 000 FCFA</td>
+                        <td>- 16 200 000 FCFA</td>
+                    </tr>
+                    <tr>
+                        <td>Frais de Péage Autoroutier (Attinguié, Yamoussoukro)</td>
+                        <td>- 18 000 FCFA</td>
+                        <td>- 2 160 000 FCFA</td>
+                    </tr>
+                    <tr>
+                        <td>Rémunération Équipage & Maintenance Préventive</td>
+                        <td>- 45 000 FCFA</td>
+                        <td>- 5 400 000 FCFA</td>
+                    </tr>
+                    <tr style="background:#d1fae5; font-weight:800; color:#065f46;">
+                        <td><strong>Marge Nette d'Exploitation (Avant Impôt)</strong></td>
+                        <td><strong>+ 247 000 FCFA (55%)</strong></td>
+                        <td><strong>+ 29 640 000 FCFA</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">Calendrier de Déploiement Stratégique</h3>
+            <div class="two-cols">
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-flag text-emerald"></i> Phase 1 : Consolidation Nord (T2 2026)</h4>
+                    <p style="font-size:8.5pt;">Mise en service complète des 4 départs quotidiens Korhogo-Abidjan, bornes de contrôle en gare de Korhogo et Adjamé, intégration Wave et Orange Money.</p>
+                </div>
+                <div class="card-box">
+                    <h4><i class="fa-solid fa-network-wired text-emerald"></i> Phase 2 : Extension Grand Ouest (T4 2026)</h4>
+                    <p style="font-size:8.5pt;">Ouverture des lignes Man (Région des 18 Montagnes), San-Pédro (Premier port cacaoyer) et Daloa avec intégration de 12 nouveaux véhicules.</p>
+                </div>
+            </div>
+
+            <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:16px; display:flex; justify-content:space-between; align-items:flex-end;">
+                <div>
+                    <span style="font-size:9pt; color:var(--text-light); display:block; margin-bottom:4px;">Pour la Direction Générale :</span>
+                    <strong style="font-size:11pt; color:var(--dark);">BEMA TRANSPORT & LOGISTIQUE S.A.R.L.</strong>
+                    <p style="font-size:8.5pt; color:var(--text-light); margin-top:2px;">Korhogo • Abidjan • République de Côte d'Ivoire</p>
+                </div>
+                <div style="text-align:right;">
+                    <span style="font-size:8.5pt; color:var(--text-light); display:block; margin-bottom:20px;">Sceau d'Approbation du Conseil :</span>
+                    <div style="display:inline-block; border:2px dashed var(--primary); padding:6px 16px; border-radius:8px; font-weight:800; color:var(--primary); font-size:9pt;">
+                        VU ET APPROUVÉ — OCTOBRE 2026
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="doc-footer">
+            <span>BEMA TRANSPORT S.A.R.L. — Dossier Collaborateurs</span>
+            <span>Fin du Dossier Technique</span>
+        </div>
+    </div>
+
+</body>
+</html>
