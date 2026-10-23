@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEMA TRANSPORT - Réservation de Billets de Car & Suivi GPS en Direct | Côte d'Ivoire</title>
+    <meta name="description" content="Plateforme officielle de réservation de billets de car interurbain en Côte d'Ivoire. Ligne Korhogo - Abidjan à 10 000 FCFA. Paiement sécurisé Wave, Orange Money, MTN MoMo et suivi GPS en temps réel.">
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+    <!-- Feuilles de style Leaflet & Application -->
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- FontAwesome pour les icônes d'interface -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <!-- ==========================================================================
+         EN-TÊTE PRINCIPAL DU SITE BEMA TRANSPORT
+         ========================================================================== -->
+    <header class="site-header">
+        <!-- Bandeau d'information et horloge GMT Abidjan -->
+        <div class="top-bar-ticker">
+            <div class="ticker-content">
+                <div class="ticker-live-item">
+                    <span class="ticker-dot-pulse"></span>
+                    <span>Liaison Phare : <strong>KORHOGO ➔ ABIDJAN</strong> • Tarif officiel garanti : <strong>10 000 FCFA</strong></span>
+                </div>
+                <div class="ticker-right-tools">
+                    <span class="clock-badge" id="abidjanClock"><i class="fa-regular fa-clock"></i> Abidjan : 12:00:00</span>
+                    <span class="support-pill"><i class="fa-solid fa-headset"></i> Service Client : +225 27 36 86 00 12</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation principale -->
+        <nav class="main-header-nav">
+            <div class="brand-identity" onclick="bemaApp.showSection('bookingSection')">
+                <img src="assets/logo.jpg" alt="BEMA Transport Logo" class="brand-logo-img">
+                <div class="brand-names">
+                    <h1>BEMA TRANSPORT</h1>
+                    <span class="brand-slogan">L'excellence du voyage au cœur de la Côte d'Ivoire</span>
+                </div>
+            </div>
+
+            <!-- Liens de navigation -->
+            <div class="site-nav-links">
+                <button type="button" class="nav-link active" data-section="bookingSection" onclick="bemaApp.showSection('bookingSection')">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Réserver un Billet</span>
+                </button>
+                <button type="button" class="nav-link" data-section="liveTrackingSection" onclick="bemaApp.showSection('liveTrackingSection')">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span>Suivi en Direct</span>
+                    <span class="nav-badge-live">LIVE</span>
+                </button>
+                <button type="button" class="nav-link" data-section="myTicketsSection" onclick="bemaApp.showSection('myTicketsSection')">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Mes Billets</span>
+                </button>
+                <button type="button" class="nav-link" data-section="adminSection" onclick="bemaApp.showSection('adminSection')">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Espace Compagnie</span>
+                </button>
+            </div>
+
+            <!-- Actions rapides (Cloche notifications, Audio, Switch Admin) -->
+            <div class="header-actions">
+                <button type="button" class="btn-icon-header" id="btnAudioToggle" onclick="bemaAudio.toggleAudio(); bemaNotifications.showToast('Audio sonore basculé', 'info');" title="Activer / Désactiver les annonces sonores">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <button type="button" class="btn-icon-header" id="btnNotifBell" onclick="bemaNotifications.togglePanel()" title="Centre de notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notif-badge-pill" id="notifBadgeCount" style="display:none;">0</span>
+                </button>
+                <button type="button" class="btn-admin-switch" onclick="bemaApp.showSection('adminSection')">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Admin BEMA</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Menu déroulant des notifications -->
+        <div class="notifications-dropdown" id="notificationsPanel">
+            <div class="notif-header">
+                <h4><i class="fa-regular fa-bell"></i> Notifications en direct</h4>
+                <button type="button" class="btn-text-action" onclick="bemaNotifications.markAllAsRead()">Tout marquer lu</button>
+            </div>
+            <div class="notifications-list" id="notificationsList">
+                <!-- Rempli dynamiquement par notifications.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         CONTENU PRINCIPAL DE L'APPLICATION (VUES DYNAMIQUES)
+         ========================================================================== -->
+    <main class="app-main-content">
+
+        <!-- ====================================================================
+             SECTION 1 : PORTAIL VOYAGEUR - RECHERCHE & RÉSERVATION (FLIXBUS STYLE)
+             ==================================================================== -->
+        <section class="app-section active" id="bookingSection">
+            <!-- Bannière Hero -->
+            <div class="hero-booking-banner">
+                <div class="hero-background-wrap">
+                    <img src="assets/hero.jpg" alt="Autocar de luxe BEMA sur l'Autoroute du Nord" class="hero-cover-img">
+                    <div class="hero-gradient-overlay"></div>
+                    <div class="hero-content-over">
+                        <span class="hero-badge-highlight"><i class="fa-solid fa-crown"></i> Compagnie N°1 en Côte d'Ivoire</span>
+                        <h2 class="hero-title">Voyagez en première classe de Korhogo à Abidjan</h2>
+                        <p class="hero-subtitle">Autocars grand confort climatisés avec Wi-Fi 4G, prises individuelles, suivi GPS temps réel et paiement direct par Wave ou Orange Money.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de recherche de trajet -->
+            <div class="search-widget-card">
+                <form id="tripSearchForm">
+                    <div class="search-form-grid">
+                        <!-- Ville de départ -->
+                        <div class="search-field-group">
+                            <label for="searchOrigin"><i class="fa-solid fa-location-dot"></i> Ville de départ</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-bus"></i>
+                                <select id="searchOrigin" class="form-select" required>
+                                    <!-- Rempli par app.js -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Bouton Permuter les villes -->
+                        <button type="button" class="btn-swap-cities" id="btnSwapCities" title="Inverser les villes de départ et d'arrivée">
+                            <i class="fa-solid fa-right-left"></i>
+                        </button>
+
+                        <!-- Ville d'arrivée -->
+                        <div class="search-field-group">
+                            <label for="searchDest"><i class="fa-solid fa-map-pin"></i> Ville de destination</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-location-arrow"></i>
+                                <select id="searchDest" class="form-select" required>
+                                    <!-- Rempli par app.js -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Date de départ -->
+                        <div class="search-field-group">
+                            <label for="searchDate"><i class="fa-regular fa-calendar-days"></i> Date du voyage</label>
+                            <div class="input-with-icon">
+                                <i class="fa-regular fa-calendar"></i>
+                                <input type="date" id="searchDate" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <!-- Passagers -->
+                        <div class="search-field-group">
+                            <label for="searchPassengers"><i class="fa-solid fa-users"></i> Voyageurs</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-user"></i>
+                                <select id="searchPassengers" class="form-select">
+                                    <option value="1">1 Adulte</option>
+                                    <option value="2">2 Adultes</option>
+                                    <option value="3">3 Adultes</option>
+                                    <option value="4">4+ Groupe</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Bouton Rechercher -->
+                        <button type="submit" class="btn-search-trips">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Rechercher</span>
+                        </button>
+                    </div>
+
+                    <!-- Raccourcis de trajets fréquents -->
+                    <div class="quick-routes-pills">
+                        <span>Liaisons directes populaires :</span>
+                        <button type="button" class="route-pill-btn active" onclick="bemaApp.resetSearchToKorhogoAbidjan()">
+                            <i class="fa-solid fa-star text-accent"></i> Korhogo ➔ Abidjan (10 000 FCFA)
+                        </button>
+                        <button type="button" class="route-pill-btn" onclick="document.getElementById('searchOrigin').value='ABIDJAN'; document.getElementById('searchDest').value='KORHOGO'; bemaApp.searchTrips();">
+                            Abidjan ➔ Korhogo (10 000 FCFA)
+                        </button>
+                        <button type="button" class="route-pill-btn" onclick="document.getElementById('searchOrigin').value='BOUAKE'; document.getElementById('searchDest').value='ABIDJAN'; bemaApp.searchTrips();">
+                            Bouaké ➔ Abidjan (6 000 FCFA)
+                        </button>
+                        <button type="button" class="route-pill-btn" onclick="document.getElementById('searchOrigin').value='YAMOUSSOUKRO'; document.getElementById('searchDest').value='ABIDJAN'; bemaApp.searchTrips();">
+                            Yamoussoukro ➔ Abidjan (4 000 FCFA)
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Liste des départs disponibles (Flixbus style) -->
+            <div class="results-wrapper">
+                <div class="results-header-bar">
+                    <h3>Départs & Horaires disponibles</h3>
+                    <span class="results-count-badge" id="resultsCountBadge">4 départs disponibles</span>
+                </div>
+
+                <div class="trip-results-list" id="tripResultsContainer">
+                    <!-- Rempli dynamiquement par app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 2 : RADAR DE SUIVI EN DIRECT (LIVE GPS TRACKING SUR CARTE)
+             ==================================================================== -->
+        <section class="app-section" id="liveTrackingSection">
+            <div class="live-tracking-layout">
+                <!-- Carte interactive Leaflet -->
+                <div class="map-viewport-card">
+                    <div class="map-live-header">
+                        <div class="header-left">
+                            <span class="badge-operator-secure"><i class="fa-solid fa-satellite"></i> RADAR SATELLITE ACTIF</span>
+                            <h3>Suivi en direct : Car BEMA-401 (Korhogo ➔ Abidjan)</h3>
+                        </div>
+                        <div class="header-controls">
+                            <button type="button" class="btn btn-sm btn-secondary" id="btnMapPlayPause" onclick="bemaMap.togglePlayPause()">
+                                <i class="fa-solid fa-pause"></i> <span>Mettre en Pause</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="liveMapContainer" class="map-container-frame"></div>
+                </div>
+
+                <!-- Télémétrie HUD du véhicule -->
+                <div class="telemetry-hud-sidebar">
+                    <div class="hud-title-wrap">
+                        <h3>Télémétrie de Bord</h3>
+                        <span class="status-pill-hud badge-ontime" id="hudTripStatusPill">
+                            <i class="fa-solid fa-circle-check"></i> En Circulation Normale
+                        </span>
+                    </div>
+
+                    <!-- Vitesse en direct -->
+                    <div class="speedometer-card">
+                        <span class="step-label">Vitesse Instantanée</span>
+                        <div class="speedo-dial" id="hudSpeedValue">84</div>
+                        <span class="speedo-unit">Kilomètres / Heure (km/h)</span>
+                    </div>
+
+                    <!-- Progression globale de Korhogo à Abidjan -->
+                    <div class="hud-progress-block">
+                        <div class="progress-labels-row">
+                            <span>Progression de l'itinéraire</span>
+                            <strong id="hudProgressPercent" class="text-emerald">48%</strong>
+                        </div>
+                        <div class="hud-track-bar">
+                            <div class="hud-track-fill" id="hudProgressBarFill" style="width: 48%;"></div>
+                        </div>
+                        <div class="hud-km-stats">
+                            <span>Parcourus : <strong id="hudKmCovered">278 km</strong></span>
+                            <span>Restants : <strong id="hudKmRemaining">302 km</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Prochain arrêt / Gare -->
+                    <div class="hud-step-card">
+                        <span class="step-label">Prochaine Étape / Arrêt</span>
+                        <strong class="next-stop-title" id="hudNextStopName">Gare Centrale de Bouaké</strong>
+                        <span class="step-distance" id="hudNextStopDist">à 14 km (arrivée dans ~12 min)</span>
+                    </div>
+
+                    <!-- Heure estimée d'arrivée (ETA) -->
+                    <div class="hud-step-card">
+                        <span class="step-label">Heure d'Arrivée Estimée à Abidjan</span>
+                        <strong class="next-stop-title text-accent" id="hudEstimatedArrival">15:15 (À l'heure)</strong>
+                        <span class="step-distance">Terminus : Gare Centrale BEMA Adjamé Liberté</span>
+                    </div>
+
+                    <!-- Simulateur interactif de conduite et d'incidents -->
+                    <div class="sim-controls-block">
+                        <span class="sim-controls-title">Contrôles du Simulateur GPS :</span>
+                        <div class="sim-buttons-grid">
+                            <button type="button" class="btn-sim btn-sim-speed" data-speed="1" onclick="bemaMap.setSimulationSpeed(1)">x1 (Réel)</button>
+                            <button type="button" class="btn-sim btn-sim-speed active" data-speed="5" onclick="bemaMap.setSimulationSpeed(5)">x5 (Démo)</button>
+                            <button type="button" class="btn-sim btn-sim-speed" data-speed="25" onclick="bemaMap.setSimulationSpeed(25)">x25 (Rapide)</button>
+                            <button type="button" class="btn-sim" onclick="bemaMap.skipToNextCheckpoint()">Sauter étape</button>
+                        </div>
+                        <button type="button" class="btn-trigger-delay" onclick="bemaMap.triggerSimulatedDelay()">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Simuler un Retard (+25 min Péage)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 3 : MES BILLETS & HISTORIQUE VOYAGEUR
+             ==================================================================== -->
+        <section class="app-section" id="myTicketsSection">
+            <div class="section-title-wrap mb-4">
+                <h2>Mon Portefeuille de Billets Électroniques</h2>
+                <p class="text-secondary">Retrouvez tous vos titres de transport réservés avec leur QR code d'accès et le suivi en temps réel.</p>
+            </div>
+            <div id="myTicketsContainer">
+                <!-- Rempli par ticket.js -->
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 4 : ESPACE COMPAGNIE & BACK-OFFICE ADMIN BEMA
+             ==================================================================== -->
+        <section class="app-section" id="adminSection">
+            <div class="admin-header-strip">
+                <div>
+                    <h2>Espace Gestionnaire • BEMA TRANSPORT</h2>
+                    <p class="text-secondary">Supervision du réseau, programmation des départs, contrôle d'embarquement et flotte.</p>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="bemaAdmin.openNewScheduleModal()">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Programmer un Nouveau Départ</span>
+                </button>
+            </div>
+
+            <!-- 4 Indicateurs Clés de Performance (KPIs) -->
+            <div class="kpi-metrics-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon revenue"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div>
+                        <span class="kpi-value" id="kpiRevenue">2 450 000 FCFA</span>
+                        <span class="kpi-label">Recettes encaissées aujourd'hui</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon tickets"><i class="fa-solid fa-ticket"></i></div>
+                    <div>
+                        <span class="kpi-value" id="kpiTicketsSold">245</span>
+                        <span class="kpi-label">Billets délivrés ce jour</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon occupancy"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div>
+                        <span class="kpi-value" id="kpiOccupancy">88%</span>
+                        <span class="kpi-label">Taux d'occupation moyen</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon fleet"><i class="fa-solid fa-bus"></i></div>
+                    <div>
+                        <span class="kpi-value" id="kpiActiveBuses">4</span>
+                        <span class="kpi-label">Autocars actifs sur le réseau</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module Scanner & Contrôle d'Embarquement en Gare -->
+            <div class="admin-block-card">
+                <div class="card-title-row">
+                    <h3><i class="fa-solid fa-qrcode text-emerald"></i> Contrôle & Validation des Billets (Embarquement en Gare)</h3>
+                    <span class="badge-operator-secure">Mode Contrôleur Actif</span>
+                </div>
+                <div class="scanner-grid-layout">
+                    <!-- Viseur scanner -->
+                    <div class="scanner-camera-box">
+                        <div class="scanner-viewfinder">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <div class="scanner-laser-line"></div>
+                        </div>
+                        <p class="mt-3 text-secondary">Placez le QR Code du billet devant le lecteur ou utilisez la saisie manuelle :</p>
+                        <div class="input-group-manual mt-2" style="display:flex; gap:8px; width:80%; max-width:360px;">
+                            <input type="text" id="scannerManualInput" class="form-input" placeholder="Ex: BEMA-KOR-ABJ-8842">
+                            <button type="button" class="btn btn-secondary" onclick="bemaAdmin.validateScannedTicketInput()">Valider</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline mt-3" onclick="bemaAdmin.scanLatestTicketShortcut()">
+                            <i class="fa-solid fa-bolt"></i> Scanner automatiquement le dernier billet créé
+                        </button>
+                    </div>
+
+                    <!-- Résultat de vérification -->
+                    <div class="scanner-result-box" id="scannerResultDisplay">
+                        <div class="text-center text-muted">
+                            <i class="fa-solid fa-barcode" style="font-size: 40px; margin-bottom: 12px;"></i>
+                            <p>En attente de scan d'un billet...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau de Gestion des Départs & Horaires -->
+            <div class="admin-block-card">
+                <div class="card-title-row">
+                    <h3><i class="fa-solid fa-calendar-check text-accent"></i> Horaires et Départs Programmés</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-data-table">
+                        <thead>
+                            <tr>
+                                <th>Code Voyage</th>
+                                <th>Liaison & Gare</th>
+                                <th>Horaires</th>
+                                <th>Autocar BEMA</th>
+                                <th>Chauffeur</th>
+                                <th>Tarif</th>
+                                <th>Occupation</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminDeparturesTableBody">
+                            <!-- Rempli par admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tableau de la Flotte BEMA TRANSPORT -->
+            <div class="admin-block-card">
+                <div class="card-title-row">
+                    <h3><i class="fa-solid fa-van-shuttle text-info"></i> Parc Automobile & Véhicules BEMA</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Car</th>
+                                <th>Immatriculation CI</th>
+                                <th>Modèle & Version</th>
+                                <th>Capacité</th>
+                                <th>Chauffeur Titulaire</th>
+                                <th>Kilométrage</th>
+                                <th>État Opérationnel</th>
+                                <th>Équipements</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminFleetTableBody">
+                            <!-- Rempli par admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 5 : VUE GRAND FORMAT DU E-BILLET APRÈS RÉSERVATION
+             ==================================================================== -->
+        <section class="app-section" id="ticketViewSection">
+            <div id="ticketViewContainer">
+                <!-- Rempli par ticket.js -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================================
+         MODALES INTERACTIVES
+         ========================================================================== -->
+
+    <!-- Modal 1 : Plan de sièges interactif (SeatMap Flixbus) -->
+    <div class="modal-overlay" id="seatSelectionModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h3>Sélectionnez votre Siège à bord</h3>
+                    <p class="text-secondary text-sm">Choisissez votre place préférée (Fenêtre, Couloir ou Vue Panoramique)</p>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="bemaApp.closeSeatSelectionModal()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="seatMapContainer">
+                <!-- Rendu par seatmap.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2 : Coordonnées du voyageur -->
+    <div class="modal-overlay" id="passengerModal">
+        <div class="modal-card" style="max-width: 540px;">
+            <div class="modal-header">
+                <div>
+                    <h3>Informations du Passager</h3>
+                    <p class="text-secondary text-sm">Les informations doivent correspondre à votre pièce d'identité</p>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="bemaApp.closePassengerModal()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="passengerTripSummary" class="mb-3"></div>
+                <form id="passengerDetailsForm">
+                    <div class="form-group mb-3">
+                        <label for="passFullName"><i class="fa-solid fa-user"></i> Nom et Prénom complet :</label>
+                        <input type="text" id="passFullName" class="form-input" placeholder="Ex: Kouamé Jean-Marc" required value="Kouamé Jean-Marc">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="passPhone"><i class="fa-solid fa-phone"></i> Téléphone Mobile (Côte d'Ivoire) :</label>
+                        <input type="tel" id="passPhone" class="form-input" placeholder="+225 07 XX XX XX XX" required value="+225 07 48 99 22 10">
+                        <small class="text-muted">Nécessaire pour la réception du SMS de confirmation et du e-billet.</small>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="passIdCard"><i class="fa-solid fa-id-card"></i> Numéro CNI / Passeport / Attestation :</label>
+                        <input type="text" id="passIdCard" class="form-input" placeholder="Ex: C009841284" value="CI-009841284">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="passEmail"><i class="fa-solid fa-envelope"></i> Adresse Email (Optionnel) :</label>
+                        <input type="email" id="passEmail" class="form-input" placeholder="mon.email@gmail.com" value="voyageur.ci@gmail.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" style="width:100%; justify-content:center; padding:14px; font-size:16px;">
+                        <span>Accéder au Paiement Mobile Money</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3 : Paiement Mobile Money (Wave, OM, MTN, Moov, Carte, En Gare) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div id="paymentModalContent" style="width:100%; display:flex; justify-content:center;">
+            <!-- Rendu par payment.js -->
+        </div>
+    </div>
+
+    <!-- Modal 4 : Programmer un nouveau départ (Admin) -->
+    <div class="modal-overlay" id="newScheduleModal">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <div>
+                    <h3>Programmer un Nouveau Départ</h3>
+                    <p class="text-secondary text-sm">Ajouter une liaison au tableau des horaires BEMA</p>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="bemaAdmin.closeNewScheduleModal()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="bemaAdmin.createNewDeparture(event)">
+                    <div class="form-row-2 mb-3" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="adminNewOrigin">Ville de départ :</label>
+                            <select id="adminNewOrigin" class="form-select" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminNewDest">Ville d'arrivée :</label>
+                            <select id="adminNewDest" class="form-select" required></select>
+                        </div>
+                    </div>
+                    <div class="form-row-2 mb-3" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="adminNewDepTime">Heure de départ :</label>
+                            <input type="time" id="adminNewDepTime" class="form-input" value="10:00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminNewArrTime">Heure d'arrivée estimée :</label>
+                            <input type="time" id="adminNewArrTime" class="form-input" value="18:45" required>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="adminNewBusSelect">Affectation du Car BEMA :</label>
+                        <select id="adminNewBusSelect" class="form-select" required></select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="adminNewDriverSelect">Chauffeur Assigné :</label>
+                        <select id="adminNewDriverSelect" class="form-select" required></select>
+                    </div>
+                    <div class="form-row-2 mb-4" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="adminNewPrice">Prix du Billet (FCFA) :</label>
+                            <input type="number" id="adminNewPrice" class="form-input" value="10000" step="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminNewServiceType">Service :</label>
+                            <select id="adminNewServiceType" class="form-select">
+                                <option value="VIP Climatisé">VIP Climatisé Grand Confort</option>
+                                <option value="Confort Plus">Confort Plus Climatisé</option>
+                                <option value="Standard Climatisé">Standard Climatisé</option>
+                                <option value="Bus de Nuit VIP">Bus de Nuit VIP Couchette</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Enregistrer et Publier le Départ</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5 : Signalement de retard / modification de statut (Admin) -->
+    <div class="modal-overlay" id="delayModal">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <div>
+                    <h3>Mise à jour Horaire & Trafic</h3>
+                    <p class="text-secondary text-sm" id="delayModalTripInfo">Car BEMA-401</p>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="bemaAdmin.closeDelayModal()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="bemaAdmin.saveDelayUpdate(event)">
+                    <input type="hidden" id="delayDepartureId">
+                    <div class="form-group mb-3">
+                        <label for="delayStatusSelect">Statut du voyage :</label>
+                        <select id="delayStatusSelect" class="form-select">
+                            <option value="a_l_heure">À l'heure (Circulation normale)</option>
+                            <option value="embarquement">En cours d'embarquement</option>
+                            <option value="en_route">En route (Sur autoroute A3)</option>
+                            <option value="retarde" selected>Retardé</option>
+                            <option value="termine">Arrivé à quai / Terminé</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="delayMinutesInput">Retard estimé (en minutes) :</label>
+                        <input type="number" id="delayMinutesInput" class="form-input" value="25" min="0" step="5">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="delayReasonInput">Motif du retard :</label>
+                        <input type="text" id="delayReasonInput" class="form-input" value="Ralentissement important au péage de Yamoussoukro (travaux de voirie)">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Diffuser la mise à jour aux voyageurs</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6 : Diffusion d'alerte spécifique (Admin) -->
+    <div class="modal-overlay" id="alertBroadcastModal">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <div>
+                    <h3>Diffuser une alerte aux passagers</h3>
+                    <p class="text-secondary text-sm" id="broadcastTargetInfo"></p>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="bemaAdmin.closeAlertBroadcastModal()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="bemaAdmin.sendBroadcastAlert(event)">
+                    <input type="hidden" id="broadcastDepartureId">
+                    <div class="form-group mb-3">
+                        <label for="broadcastTitleInput">Titre de l'annonce :</label>
+                        <input type="text" id="broadcastTitleInput" class="form-input" value="Changement de quai d'embarquement" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="broadcastMessageInput">Message diffusé par SMS & App :</label>
+                        <textarea id="broadcastMessageInput" class="form-input" rows="4" style="height:auto;" required>Veuillez vous présenter au Quai N° 3 de la gare de Korhogo pour l'embarquement immédiat du car BEMA-401.</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Diffuser l'annonce immédiatement</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteneur des notifications flottantes (Toast) -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==========================================================================
+         SCRIPTS JAVASCRIPT
+         ========================================================================== -->
+    <script src="js/leaflet.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/seatmap.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/ticket.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
